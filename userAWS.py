@@ -5,11 +5,6 @@ Created on Thu Jun 29 20:34:42 2017
 @author: Mikołaj
 """
 
-import boto3
-import json
-
-# Create IAM client
-iam = boto3.client('iam')
 
 
 ###### policy
