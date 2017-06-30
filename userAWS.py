@@ -69,7 +69,7 @@ def createUser(username):
 createUser('Pawel')
 createUser('Wojtek')
 print ("cześć")
-print ("Mikolaj z locala mowi cześć")
+print ("Mikolaj z locala mowi cześć2")
 #iam.detach_user_policy(
 #    UserName='Pawel',
 #    PolicyArn='arn:aws:iam::050452088192:policy/DevAccess'
