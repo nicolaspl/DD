@@ -4,7 +4,7 @@ Created on Thu Jun 29 20:34:42 2017
 
 @author: Mikołaj
 """
-
+'''zmiana z mastera'''
 
 
 ###### policy
