@@ -5,3 +5,5 @@ GRANT ALL PRIVILEGES ON deepdoc3.* TO 'dd_pawel'@'localhost';
 
 
 asdds
+
+### zmiana 11:10 ###
