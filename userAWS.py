@@ -73,6 +73,7 @@ def createUser(username):
 
 createUser('Pawel')
 createUser('Wojtek')
+print ("cześć")
 
 #iam.detach_user_policy(
 #    UserName='Pawel',
