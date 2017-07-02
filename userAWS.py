@@ -13,6 +13,8 @@ asdsad
 DevAccess={
    "Version":"2012-10-17",
    "Statement":[
+       
+       asdasd
    {
       "Effect": "Allow",
       "Action": "iam:GetAccountPasswordPolicy",
