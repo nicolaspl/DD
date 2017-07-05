@@ -1,6 +1,6 @@
 import pandas as pd
 
-def getUserFromJSON (json):
+def getFBUserFromJSON (json):
 
   result=pd.DataFrame()
 
