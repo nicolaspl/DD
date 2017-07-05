@@ -6,12 +6,15 @@ Created on Thu Jun 29 20:34:42 2017
 """
 '''zmiana z mastera'''
 
-
+woj2
+asdsad
 ###### policy
     
 DevAccess={
    "Version":"2012-10-17",
    "Statement":[
+       
+       asdasd
    {
       "Effect": "Allow",
       "Action": "iam:GetAccountPasswordPolicy",
