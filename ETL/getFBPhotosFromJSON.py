@@ -68,19 +68,19 @@ def getFBPhotosFromJSON(photos):
             photo_dict['picture']=None
                       
         try:              
-            photo_dict['tags']=len(photo['tags']['data'])
+            photo_dict['tags_cnt']=len(photo['tags']['data'])
         except:
-            photo_dict['tags']=None
+            photo_dict['tags_cnt']=None
                       
         try:              
-            photo_dict['comments']=len(photo['comments']['data'])
+            photo_dict['comments_cnt']=len(photo['comments']['data'])
         except:
-            photo_dict['comments']=0
+            photo_dict['comments_cnt']=0
                       
         try:              
-            photo_dict['likes']=len(photo['likes']['data'])
+            photo_dict['likes_cnt']=len(photo['likes']['data'])
         except:    
-            photo_dict['likes']=0
+            photo_dict['likes_cnt']=0
                                        
         try:            
             photo_dict['from_name']=photo['from']['name']
