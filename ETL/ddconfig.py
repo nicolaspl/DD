@@ -15,7 +15,7 @@ db_name = "deepdoc3"
 ############################################################
 ################### S3 CONFIG ##############################
 
-source_data_bucket='deepdocpics'
+source_data_bucket='deepdocfbdata'
 ids4reklabelsproc='ids4reklabelsproc'
 ids4rekfacesproc='ids4rekfacesproc'
 ids4hsvproc='ids4hsvproc'
