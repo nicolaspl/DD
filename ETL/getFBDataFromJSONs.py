@@ -27,7 +27,7 @@ def getFBDataFromJSONs():
   
   #ponieważ poszczególne 4 funkcje mogą zasilać te same tabelki docelowe, użyj funkcji matchFBDataTables(), żeby połączyć te df (np. likes z User z Likes)
   matchFBDataTables(wyniki wyniki przetwarzania wszystkich JSONów)
-  #zwróć zestaw dataframeów, zawierający wszystkie dane ze wszystkich plików JSON
+  #zwróć zestaw dataframeów, zawierający wszystkie dane ze wszystkich plików JSON, w takiej formie, żeby można było je załadować do bazy
   #ta funkcja powinna zawierać <10 linijek kodu
   
   
