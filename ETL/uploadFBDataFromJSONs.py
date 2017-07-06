@@ -10,6 +10,7 @@ def uploadFBPhotosFromJSONs(zagregowana tabela):
 def uploadFBPostsFromJSONs(zagregowana tabela):
   # nic nie zwraca, tylko ładuje dane do bazy
   
+# + poszczególne update'y dla kolejnych tabel pomocnicznych
 
 def uploadFBDataFromJSONs():
   uploadFBUserFromJSONs(zagregowana tabela)
