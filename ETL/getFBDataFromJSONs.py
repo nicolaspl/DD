@@ -10,6 +10,7 @@ def getFBDataFromJSONs():
   FBLikesData=getFBLikesFromJSON() 
   getFBPostsFromJSON()
   
+  #ponieważ poszczególne 4 funkcje mogą zasilać te same tabelki docelowe, użyj funkcji matchFBDataTables(), żeby połączyć te df (np. likes z User z Likes)
   #zwróć zestaw dataframeów, zawierający wszystkie dane ze wszystkich plików JSON
   #ta funkcja powinna zawierać max 15 linijek kodu- przeszukiwanie S3 pod kątem JSONów danego typu i ich parsowanie należy zapakować w oddzielne funkcję i tutaj tlko je wywołać
   
