@@ -1,4 +1,9 @@
-
+def ReadCSVFromBucket(filename,bucket):
+    ''' wczytuje csv jako dataframe'''
+    s3=boto3.client('s3',config=Config(signature_version='s3v4'))
+    s3.download_file(bucket, filename, ddconfig.tempcsvpath)
+    result=pd.read_csv(ddconfig.tempcsvpath,encoding='utf-8')
+    return result
 
 def getFBUserDataFromJSONs():  
   ## przeszukaj S3 pod kątem JSONów z danymi usera i utwórz listę z adresmi do plików
