@@ -46,7 +46,10 @@ def getFBUserFromJSON (user_json):
     photos_df['backdated_time'] = [None]
     photos_df['image_big_height'] = [None]
     photos_df['image_big_width'] = [None]
-    photos_df['image_big_source'] = [None]
+    try:
+        photos_df['image_big_source'] = [user_json['cover']['source']]
+    except:
+        photos_df['image_big_source'] = [None]
     photos_df['image_small_height'] = [None]
     photos_df['image_small_width'] = [None]
     photos_df['image_small_source'] = [None]        
@@ -278,34 +281,34 @@ def getFBUserFromJSON (user_json):
         pass
     
     # 28. read tagged places into tagged places table
-#    try:
-#        for place in user_json['tagged_places']['data']:
-#            place_row = pd.DataFrame()
-#            place_row['user_id'] = [user_id]
-#            place_row['category'] = ['tagged']
-#            try:
-#                place_row['city'] = [place['place']['location']['city']]
-#            except:
-#                place_row['city'] = [None]
-#            try:
-#                place_row['country'] = [place['place']['location']['country']]
-#            except:
-#                place_row['country'] = [None]
-#            try:
-#                place_row['latitude'] = [place['place']['location']['latitude']]
-#            except:
-#                place_row['latitude'] = [None]
-#            try:
-#                place_row['longitude'] = [place['place']['location']['longitude']]
-#            except:
-#                place_row['longitude'] = [None]
-#            try:
-#                place_row['created_time'] = [place['created_time']]
-#            except:
-#                place_row['created_time'] = [None]
-#            location_df = location_df.append(place_row)
-#    except:
-#        pass
+    try:
+        for place in user_json['tagged_places']['data']:
+            place_row = pd.DataFrame()
+            place_row['user_id'] = [user_id]
+            place_row['category'] = ['tagged']
+            try:
+                place_row['city'] = [place['place']['location']['city']]
+            except:
+                place_row['city'] = [None]
+            try:
+                place_row['country'] = [place['place']['location']['country']]
+            except:
+                place_row['country'] = [None]
+            try:
+                place_row['latitude'] = [place['place']['location']['latitude']]
+            except:
+                place_row['latitude'] = [None]
+            try:
+                place_row['longitude'] = [place['place']['location']['longitude']]
+            except:
+                place_row['longitude'] = [None]
+            try:
+                place_row['created_time'] = [place['created_time']]
+            except:
+                place_row['created_time'] = [None]
+            location_df = location_df.append(place_row)
+    except:
+        pass
     
     # 29. read work into work table
     try:
@@ -416,23 +419,19 @@ def getFBUserFromJSON (user_json):
 #==============================================================================
 # Execution example
 #==============================================================================
-def openFile(path):
-    f = open(path, 'r')
-    file = json.load(f)
-    return file
-
-path = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\user.json'
-path2 = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\user.json'
-path3 = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\user.json'
-
-wojtek = openFile(path)
-mikolaj = openFile(path2)
-pawel = openFile(path3)
-
-user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON (wojtek)
-user_df2, photos_df2, location_df2, education_df2, languages_df2, likes_df2, work_df2 = getFBUserFromJSON (mikolaj)
-user_df3, photos_df3, location_df3, education_df3, languages_df3, likes_df3, work_df3 = getFBUserFromJSON (pawel)
-
-
-
-print(location_df)
+#def openFile(path):
+#    f = open(path, 'r')
+#    file = json.load(f)
+#    return file
+#
+#path = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\user.json'
+#path2 = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\user.json'
+##path3 = 'C:\\Users\\Var\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\user.json'
+#
+#wojtek = openFile(path)
+#mikolaj = openFile(path2)
+#pawel = openFile(path3)
+#
+#user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON (wojtek)
+#user_df2, photos_df2, location_df2, education_df2, languages_df2, likes_df2, work_df2 = getFBUserFromJSON (mikolaj)
+#user_df3, photos_df3, location_df3, education_df3, languages_df3, likes_df3, work_df3 = getFBUserFromJSON (pawel)

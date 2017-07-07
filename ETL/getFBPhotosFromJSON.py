@@ -17,7 +17,6 @@ def getFBPhotosFromJSON(photos):
     user_id=photos['id']
 
     photos_data=photos['photos']['data']
-    print(len(photos_data))
     result=pd.DataFrame()
     
     for photo in photos_data:
@@ -93,8 +92,8 @@ def getFBPhotosFromJSON(photos):
 
 
 ################ wywołanie ################
-path='C:\\Users\\Mikołaj\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\photos.json'
-photos =openFile(path)
-
-zdjecia=getFBPhotosFromJSON(photos)
+#path='C:\\Users\\Mikołaj\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\photos.json'
+#photos =openFile(path)
+#
+#zdjecia=getFBPhotosFromJSON(photos)
 
