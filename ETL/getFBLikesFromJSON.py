@@ -3,15 +3,15 @@ import json
 
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\likes.json'
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\likes.json'
-path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\likes.json'
-def openFile(path):
-    f = open(path,'r')
-    file = json.load(f)
-    return file 
+#path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\likes.json'
+#def openFile(path):
+#    f = open(path,'r')
+#    file = json.load(f)
+#    return file 
+#
+#likes = openFile (path)
 
-likes = openFile (path)
-
-def getFBLikesFromJSON (json):
+def getFBLikesFromJSON (likes):
 
     user_id = likes['id']
     like_list = likes['likes']['data']
@@ -27,13 +27,13 @@ def getFBLikesFromJSON (json):
         except:
             like_dict['category']=None
         try:
-            like_dict['name']=like['name']
+            like_dict['like_name']=like['name']
         except:
-            like_dict['name']=None
+            like_dict['like_name']=None
         try:
-            like_dict['about']=like['about']
+            like_dict['like_about']=like['about']
         except:
-            like_dict['about']=None   
+            like_dict['like_about']=None   
         like_table=like_table.append(pd.DataFrame([like_dict],columns=like_dict.keys())) 
     #druga pętla dla category_list#
         try:
@@ -48,4 +48,4 @@ def getFBLikesFromJSON (json):
            pass
     return like_table, like_category_table
 
-like_table, like_category_table = getFBLikesFromJSON (likes)
+#like_table, like_category_table = getFBLikesFromJSON (likes)
