@@ -1,16 +1,23 @@
+#########################################################################################
+######################## FUNKCJE ZAWIERAJĄCE ZAPYTANIA SQL - inserty ####################
+
 def uploadFBUserFromJSONs(zagregowana tabela):
-    # nic nie zwraca, tylko ładuje dane do bazy
+    # nic nie zwraca, tylko Å‚aduje dane do bazy
     
 def uploadFBLikesFromJSONs(zagregowana tabela): 
-  # nic nie zwraca, tylko ładuje dane do bazy
+  # nic nie zwraca, tylko Å‚aduje dane do bazy
   
 def uploadFBPhotosFromJSONs(zagregowana tabela):
-  # nic nie zwraca, tylko ładuje dane do bazy
+  # nic nie zwraca, tylko Å‚aduje dane do bazy
 
 def uploadFBPostsFromJSONs(zagregowana tabela):
-  # nic nie zwraca, tylko ładuje dane do bazy
+  # nic nie zwraca, tylko Å‚aduje dane do bazy
   
-# + poszczególne update'y dla kolejnych tabel pomocnicznych
+# + poszczegÃ³lne update'y dla kolejnych tabel pomocnicznych
+
+#########################################################################################
+######################################### WYWOŁANIE #####################################
+
 
 def uploadFBDataFromJSONs():
   uploadFBUserFromJSONs(zagregowana tabela)
