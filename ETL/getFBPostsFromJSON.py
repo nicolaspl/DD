@@ -1,18 +1,18 @@
 import pandas as pd
 import json
 
-path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
+#path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\posts.json'
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\posts.json'
+#
+#def openFile(path):
+#    f = open(path,'r')
+#    file = json.load(f)
+#    return file 
+#
+#posts = openFile (path)
 
-def openFile(path):
-    f = open(path,'r')
-    file = json.load(f)
-    return file 
-
-posts = openFile (path)
-
-def getFBPostsFromJSON (json):
+def getFBPostsFromJSON (posts):
 
     user_id = posts['id']
     post_list = posts['posts']['data']
@@ -110,5 +110,5 @@ def getFBPostsFromJSON (json):
     
     return post_table, location_table
 
-post_table,location_table = getFBPostsFromJSON (posts)
+#post_table,location_table = getFBPostsFromJSON (posts)
 
