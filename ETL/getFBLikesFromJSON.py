@@ -27,13 +27,13 @@ def getFBLikesFromJSON (likes):
         except:
             like_dict['category']=None
         try:
-            like_dict['name']=like['name']
+            like_dict['like_name']=like['name']
         except:
-            like_dict['name']=None
+            like_dict['like_name']=None
         try:
-            like_dict['about']=like['about']
+            like_dict['like_about']=like['about']
         except:
-            like_dict['about']=None   
+            like_dict['like_about']=None   
         like_table=like_table.append(pd.DataFrame([like_dict],columns=like_dict.keys())) 
     #druga pętla dla category_list#
         try:
