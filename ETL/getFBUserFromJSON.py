@@ -19,7 +19,13 @@ def getFBUserFromJSON (user_json):
     languages_df = pd.DataFrame()
     likes_df = pd.DataFrame()
     work_df = pd.DataFrame()
-    
+    #0 read user id
+    try:
+        user_df['user_id'] = [user_json['id']]
+    except:
+        user_df['user_id'] = [None]
+
+   
     # 1. read age_range
     try:
         user_df['age_range_min'] = [user_json['age_range']['min']]
@@ -398,21 +404,7 @@ def getFBUserFromJSON (user_json):
     except:
         pass
     
-    # clean index
-    user_df.reset_index(inplace=True)
-    user_df.drop('index', axis=1, inplace=True)
-    photos_df.reset_index(inplace=True)
-    photos_df.drop('index', axis=1, inplace=True)
-    location_df.reset_index(inplace=True)
-    location_df.drop('index', axis=1, inplace=True)
-    education_df.reset_index(inplace=True)
-    education_df.drop('index', axis=1, inplace=True)
-    languages_df.reset_index(inplace=True)
-    languages_df.drop('index', axis=1, inplace=True)
-    likes_df.reset_index(inplace=True)
-    likes_df.drop('index', axis=1, inplace=True)
-    work_df.reset_index(inplace=True)
-    work_df.drop('index', axis=1, inplace=True)
+
     
     return user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
 

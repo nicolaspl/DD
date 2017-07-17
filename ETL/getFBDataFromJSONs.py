@@ -162,13 +162,13 @@ def getFBDataFromJSONs():
                       photos_photos_df, user_location_df, posts_location_df,
                       user_likes_df, likes_likes_df)
     
-    return user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df
+    return user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df
 
 #==============================================================================
 # execution test
 #==============================================================================
 
-#user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df = getFBDataFromJSONs()
+user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df = getFBDataFromJSONs()
 
 
 
