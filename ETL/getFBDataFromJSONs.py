@@ -7,25 +7,30 @@ from getFBPhotosFromJSON import getFBPhotosFromJSON
 from getFBLikesFromJSON import getFBLikesFromJSON
 from getFBPostsFromJSON import getFBPostsFromJSON
 
+
+
 ################################################################################################
 ############################ FUNKCJE POMOCNICZE ################################################
 
 def getFileNamesFromBucket(bucket,extension):
-    ''' zwraca df z nazwami plikow o danym rozszerzeniu, ktore wystepuja w konkretnym buckecie i jego podfolderach'''
+    #zwraca df z nazwami plikow o danym rozszerzeniu, ktore wystepuja w konkretnym buckecie i jego podfolderach
     
     s3=boto3.client('s3',config=Config(signature_version='s3v4'))
-      
-    #bucket=s3.list_buckets()['Buckets'][0]['Name']
+    prefix = ''
+    paginator = s3.get_paginator('list_objects_v2')
+    response_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
 
-    objects=s3.list_objects(Bucket=bucket)
-    objects.keys()
-    
-    obs=len(objects['Contents'])
-    pliki=[objects['Contents'][i]['Key'] for i in range(obs)]
-    JSONs=[plik for plik in pliki if plik.endswith(extension)]
-    result=pd.DataFrame({'File':JSONs})
+    file_names = []
+
+    for response in response_iterator:
+        for object_data in response['Contents']:
+            key = object_data['Key']
+            if key.endswith(extension):
+                file_names.append(key)
+                result=pd.DataFrame({'File':file_names})
     
     return result
+
 
 def getJSONFromBucket(bucket,filename):
     ''' wczytuje danego jsona i zwraca go'''
@@ -37,6 +42,7 @@ def getJSONFromBucket(bucket,filename):
     except:
         pass
 
+ 
 ################################################################################################
 ############################ FUNKCJE WŁAŚCIWE ##################################################
     
@@ -65,7 +71,8 @@ def getFBUserDataFromJSONs():
         
     # 4. zwróć tabele wynikowe
     return user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
-    
+
+   
 def getFBPhotosDataFromJSONs():
     # 1.
     FBPhotosJSONFileNameDF = getFileNamesFromBucket('deepdocfbdata','photos.json')
@@ -77,6 +84,7 @@ def getFBPhotosDataFromJSONs():
     
     # 3.
     photos_df = pd.DataFrame()
+    current_photos_df  = pd.DataFrame()
     for FBPhotosJSON in FBPhotosJSONList:
         current_photos_df = getFBPhotosFromJSON(FBPhotosJSON)
         photos_df = photos_df.append(current_photos_df)
@@ -168,7 +176,11 @@ def getFBDataFromJSONs():
 # execution test
 #==============================================================================
 
-user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df = getFBDataFromJSONs()
+#user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df = getFBDataFromJSONs()
+
+
+
+
 
 
 
