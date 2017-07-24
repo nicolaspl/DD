@@ -1,6 +1,15 @@
 import pandas as pd
 import json
 
+'''path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\user(4).json'
+path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\user.json'
+def openFile(path):
+    f = open(path,'r')
+    file = json.load(f)
+    return file 
+#
+user_json = openFile (path)'''
+
 #==============================================================================
 # Function takes user json file's data and returns 7 tables:
 # user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
@@ -93,51 +102,59 @@ def getFBUserFromJSON (user_json):
         user_df['gender'] = [None]
     
     # 8. read hometown information
-    hometown_df = pd.DataFrame()
-    hometown_df['user_id'] = [user_id]
-    hometown_df['category'] = ['hometown']
     try:
-        hometown_df['city'] = [user_json['hometown']['location']['city']]
+        for hometown in user_json['hometown']['location']['city']:
+            hometown_df = pd.DataFrame()
+            hometown_df['user_id'] = [user_id]
+            hometown_df['category'] = ['hometown']
+            try:
+                hometown_df['city'] = [user_json['hometown']['location']['city']]
+            except:
+                hometown_df['city'] = [None]
+            try:
+                hometown_df['country'] = [user_json['hometown']['location']['country']]
+            except:
+                hometown_df['country'] = [None]
+            try:
+                hometown_df['latitude'] = [user_json['hometown']['location']['latitude']]
+            except:
+                hometown_df['latitude'] = [None]
+            try:
+                hometown_df['longitude'] = user_json['hometown']['location']['longitude']
+            except:
+                hometown_df['longitude'] = [None]
+            hometown_df['created_time'] = [None]
+            location_df = location_df.append(hometown_df)
     except:
-        hometown_df['city'] = [None]
-    try:
-        hometown_df['country'] = [user_json['hometown']['location']['country']]
-    except:
-        hometown_df['country'] = [None]
-    try:
-        hometown_df['latitude'] = [user_json['hometown']['location']['latitude']]
-    except:
-        hometown_df['latitude'] = [None]
-    try:
-        hometown_df['longitude'] = user_json['hometown']['location']['longitude']
-    except:
-        hometown_df['longitude'] = [None]
-    hometown_df['created_time'] = [None]
-    location_df = location_df.append(hometown_df)
+        pass
             
     
     # 9. read current location information
-    current_location_df = pd.DataFrame()
-    current_location_df['user_id'] = [user_id]
-    current_location_df['category'] = ['current']
     try:
-        current_location_df['city'] = [user_json['location']['location']['city']]
+        for current_loc in user_json['location']['location']['city']:
+            current_location_df = pd.DataFrame()
+            current_location_df['user_id'] = [user_id]
+            current_location_df['category'] = ['current']
+            try:
+                current_location_df['city'] = [user_json['location']['location']['city']]
+            except:
+                current_location_df['city'] = [None]
+            try:
+                current_location_df['country'] = [user_json['location']['location']['country']]
+            except:
+                current_location_df['country'] = [None]
+            try:
+                current_location_df['latitude'] = [user_json['location']['location']['latitude']]
+            except:
+                current_location_df['latitude'] = [None]
+            try:
+                current_location_df['longitude'] = [user_json['location']['location']['longitude']]
+            except:
+                current_location_df['longitude'] = [None]
+            location_df['created_time'] = [None]
+            location_df = location_df.append(current_location_df)
     except:
-        current_location_df['city'] = [None]
-    try:
-        current_location_df['country'] = [user_json['location']['location']['country']]
-    except:
-        current_location_df['country'] = [None]
-    try:
-        current_location_df['latitude'] = [user_json['location']['location']['latitude']]
-    except:
-        current_location_df['latitude'] = [None]
-    try:
-        current_location_df['longitude'] = [user_json['location']['location']['longitude']]
-    except:
-        current_location_df['longitude'] = [None]
-    location_df['created_time'] = [None]
-    location_df = location_df.append(current_location_df)
+        pass
 
     # 10. read interested in
     try:
@@ -203,7 +220,10 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['secure_browsing'] = [user_json['secure_browsing']['enabled']]
     except:
-        user_df['secure_browsing'] = [None]
+        try:
+            user_df['secure_browsing'] = [user_json['security_settings']['secure_browsing']['enabled']]
+        except:
+            user_df['secure_browsing'] = [None]
     
     # 21. read test group
     try:
@@ -221,7 +241,10 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['time_zone'] = [user_json['time_zone']]
     except:
-        user_df['time_zone'] = [None]
+        try:
+           user_df['time_zone'] = [user_json['timezone']]
+        except:
+            user_df['time_zone'] = [None]
     
     # 24. read updated time
     try:
@@ -408,6 +431,7 @@ def getFBUserFromJSON (user_json):
     
     return user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
 
+
 #==============================================================================
 # Execution example
 #==============================================================================
@@ -427,3 +451,4 @@ def getFBUserFromJSON (user_json):
 #user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON (wojtek)
 #user_df2, photos_df2, location_df2, education_df2, languages_df2, likes_df2, work_df2 = getFBUserFromJSON (mikolaj)
 #user_df3, photos_df3, location_df3, education_df3, languages_df3, likes_df3, work_df3 = getFBUserFromJSON (pawel)
+#user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON(user_json)
