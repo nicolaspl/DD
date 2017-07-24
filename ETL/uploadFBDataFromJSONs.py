@@ -125,9 +125,9 @@ def uploadFBPostsFromJSONs(engine, posts_df):
 
     # insert nowych do tabeli docelowej
     sql=text('INSERT IGNORE INTO '+db_name+'.posts \
-    (`generationdate`, `user_id`, `post_id`, `created_time`, `full_picture_source`, `message`, `picture_source`, `status_type`, `story`, `description`, `privacy_value`, `post_source`, `from_id`, `comments_cnt`, `likes_cnt`, `with_tags_cnt`) \
+    (`generationdate`, `user_id`, `post_id`, `created_time`, `full_picture_source`, `message`, `picture_source`, `status_type`, `story`, `description`, `privacy_value`, `post_source`, `from_id`, `comments_cnt`, `likes_cnt`, `with_tags_cnt`, `reactions_cnt`) \
     SELECT \
-    now() ,`user_id`, `post_id`, `created_time`, `full_picture`, `message`, `picture`,`status_type`, `story`,`description`,`privacy_value`, `source`, `from_id`, `comments_cnt`, `likes_cnt`,  `with_tags_cnt` \
+    now() ,`user_id`, `post_id`, `created_time`, `full_picture`, `message`, `picture`,`status_type`, `story`,`description`,`privacy_value`, `source`, `from_id`, `comments_cnt`, `likes_cnt`,  `with_tags_cnt`,`reactions_cnt` \
     FROM '+db_name+'.posts_df_tmp;')
     engine.execute(sql) 
     
