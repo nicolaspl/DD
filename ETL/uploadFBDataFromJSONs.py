@@ -20,7 +20,6 @@ user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, 
 engine = create_engine('mysql+pymysql://'+db_username+':'+db_password+'@'+rds_host+'/'+db_name+'?charset=utf8',encoding='utf-8')
 conn = engine.connect()
 
-    
 #########################################################################################
 ######################## FUNKCJE ZAWIERAJĄCE ZAPYTANIA SQL - inserty ####################
 
@@ -125,9 +124,9 @@ def uploadFBPostsFromJSONs(engine, posts_df):
 
     # insert nowych do tabeli docelowej
     sql=text('INSERT IGNORE INTO '+db_name+'.posts \
-    (`generationdate`, `user_id`, `post_id`, `created_time`, `full_picture_source`, `message`, `picture_source`, `status_type`, `story`, `description`, `privacy_value`, `post_source`, `from_id`, `comments_cnt`, `likes_cnt`, `with_tags_cnt`) \
+    (`generationdate`, `user_id`, `post_id`, `created_time`, `full_picture_source`, `message`, `picture_source`, `status_type`, `story`, `description`, `privacy_value`, `post_source`, `from_id`, `comments_cnt`, `likes_cnt`, `with_tags_cnt`, `reactions_cnt`) \
     SELECT \
-    now() ,`user_id`, `post_id`, `created_time`, `full_picture`, `message`, `picture`,`status_type`, `story`,`description`,`privacy_value`, `source`, `from_id`, `comments_cnt`, `likes_cnt`,  `with_tags_cnt` \
+    now() ,`user_id`, `post_id`, `created_time`, `full_picture`, `message`, `picture`,`status_type`, `story`,`description`,`privacy_value`, `source`, `from_id`, `comments_cnt`, `likes_cnt`,  `with_tags_cnt`,`reactions_cnt` \
     FROM '+db_name+'.posts_df_tmp;')
     engine.execute(sql) 
     
@@ -187,12 +186,14 @@ def uploadFBDataFromJSONs():
     except:
         pass   
     
+####usuwanie tabel tymczasowych####    
 def dropFBtemptablesJSONs():
     
-    #usuwanie tabel tymczasowych#
+
     
     sql=text('DROP TABLE IF EXISTS likes_category_df_tmp ,likes_df_tmp ,photos_df_tmp ,user_df_tmp ,location_df_tmp ,education_df_tmp ,languages_df_tmp ,work_df_tmp ,posts_df_tmp;')
     engine.execute(sql) 
- 
+################################### 
+
 #uploadFBDataFromJSONs() 
 #dropFBtemptablesJSONs()  

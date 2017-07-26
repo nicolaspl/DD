@@ -1,6 +1,16 @@
 import pandas as pd
 import json
 
+'''path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\user(4).json'
+path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\user.json'
+def openFile(path):
+   f = open(path,'r')
+    file = json.load(f)
+    return file 
+
+user_json = openFile (path)'''
+
+
 #==============================================================================
 # Function takes user json file's data and returns 7 tables:
 # user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
@@ -38,35 +48,38 @@ def getFBUserFromJSON (user_json):
     
     # 2. read birthday
     try:
-        user_df['birthday'] = [pd.to_datetime(user_json['birthday'])]
+        user_df['birthday'] = [pd.to_datetime(user_json['birthday'])] 
     except:
-        user_df['birthday'] = [None]
+        pass
     
     # 3. read cover photo
-    photos_df['user_id'] = [user_id]
     try:
-        photos_df['photo_id'] = [user_json['cover']['id']]
+        for coverphoto in user_json['cover']:
+            photos_df['user_id'] = [user_id]
+            photos_df['image_big_height'] = [None]
+            photos_df['image_big_width'] = [None]
+            photos_df['image_small_height'] = [None]
+            photos_df['image_small_width'] = [None]
+            photos_df['image_small_source'] = [None]        
+            photos_df['name'] = [None]         
+            photos_df['picture'] = [None]      
+            photos_df['tags_cnt'] = [None]           
+            photos_df['comments_cnt'] = [None]      
+            photos_df['likes_cnt'] = [None]    
+            photos_df['from_name'] = [None]
+            photos_df['from_id'] =  [None]
+            photos_df['type'] = ['cover']
+        try:
+            photos_df['photo_id'] = [user_json['cover']['id']]
+        except:
+            photos_df['photo_id'] = [None]
+        try:
+            photos_df['image_big_source'] = [user_json['cover']['source']]
+        except:
+            photos_df['image_big_source'] = [None]
+        photos_df = photos_df.append(photos_df)
     except:
-        photos_df['photo_id'] = [None]
-    photos_df['created_time'] = [None]
-    photos_df['backdated_time'] = [None]
-    photos_df['image_big_height'] = [None]
-    photos_df['image_big_width'] = [None]
-    try:
-        photos_df['image_big_source'] = [user_json['cover']['source']]
-    except:
-        photos_df['image_big_source'] = [None]
-    photos_df['image_small_height'] = [None]
-    photos_df['image_small_width'] = [None]
-    photos_df['image_small_source'] = [None]        
-    photos_df['name'] = [None]         
-    photos_df['picture'] = [None]      
-    photos_df['tags_cnt'] = [None]           
-    photos_df['comments_cnt'] = [None]      
-    photos_df['likes_cnt'] = [None]    
-    photos_df['from_name'] = [None]
-    photos_df['from_id'] =  [None]
-    photos_df['type'] = ['cover']
+        pass
     
     # 4. read currency
     try:
@@ -93,51 +106,58 @@ def getFBUserFromJSON (user_json):
         user_df['gender'] = [None]
     
     # 8. read hometown information
-    hometown_df = pd.DataFrame()
-    hometown_df['user_id'] = [user_id]
-    hometown_df['category'] = ['hometown']
     try:
-        hometown_df['city'] = [user_json['hometown']['location']['city']]
+        for hometown in user_json['hometown']['location']['city']:
+            hometown_df = pd.DataFrame()
+            hometown_df['user_id'] = [user_id]
+            hometown_df['category'] = ['hometown']
+            hometown_df['post_id'] = [None]
+            try:
+                hometown_df['city'] = [user_json['hometown']['location']['city']]
+            except:
+                hometown_df['city'] = [None]
+            try:
+                hometown_df['country'] = [user_json['hometown']['location']['country']]
+            except:
+                hometown_df['country'] = [None]
+            try:
+                hometown_df['latitude'] = [user_json['hometown']['location']['latitude']]
+            except:
+                hometown_df['latitude'] = [None]
+            try:
+                hometown_df['longitude'] = user_json['hometown']['location']['longitude']
+            except:
+                hometown_df['longitude'] = [None]
+            location_df = location_df.append(hometown_df)
     except:
-        hometown_df['city'] = [None]
-    try:
-        hometown_df['country'] = [user_json['hometown']['location']['country']]
-    except:
-        hometown_df['country'] = [None]
-    try:
-        hometown_df['latitude'] = [user_json['hometown']['location']['latitude']]
-    except:
-        hometown_df['latitude'] = [None]
-    try:
-        hometown_df['longitude'] = user_json['hometown']['location']['longitude']
-    except:
-        hometown_df['longitude'] = [None]
-    hometown_df['created_time'] = [None]
-    location_df = location_df.append(hometown_df)
+        pass
             
     
     # 9. read current location information
-    current_location_df = pd.DataFrame()
-    current_location_df['user_id'] = [user_id]
-    current_location_df['category'] = ['current']
     try:
-        current_location_df['city'] = [user_json['location']['location']['city']]
+        for current_loc in user_json['location']['location']['city']:
+            current_location_df = pd.DataFrame()
+            current_location_df['user_id'] = [user_id]
+            current_location_df['category'] = ['current']
+            try:
+                current_location_df['city'] = [user_json['location']['location']['city']]
+            except:
+                current_location_df['city'] = [None]
+            try:
+                current_location_df['country'] = [user_json['location']['location']['country']]
+            except:
+                current_location_df['country'] = [None]
+            try:
+                current_location_df['latitude'] = [user_json['location']['location']['latitude']]
+            except:
+                current_location_df['latitude'] = [None]
+            try:
+                current_location_df['longitude'] = [user_json['location']['location']['longitude']]
+            except:
+                current_location_df['longitude'] = [None]
+            location_df = location_df.append(current_location_df)
     except:
-        current_location_df['city'] = [None]
-    try:
-        current_location_df['country'] = [user_json['location']['location']['country']]
-    except:
-        current_location_df['country'] = [None]
-    try:
-        current_location_df['latitude'] = [user_json['location']['location']['latitude']]
-    except:
-        current_location_df['latitude'] = [None]
-    try:
-        current_location_df['longitude'] = [user_json['location']['location']['longitude']]
-    except:
-        current_location_df['longitude'] = [None]
-    location_df['created_time'] = [None]
-    location_df = location_df.append(current_location_df)
+        pass
 
     # 10. read interested in
     try:
@@ -203,7 +223,10 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['secure_browsing'] = [user_json['secure_browsing']['enabled']]
     except:
-        user_df['secure_browsing'] = [None]
+        try:
+            user_df['secure_browsing'] = [user_json['security_settings']['secure_browsing']['enabled']]
+        except:
+            user_df['secure_browsing'] = [None]
     
     # 21. read test group
     try:
@@ -221,13 +244,16 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['time_zone'] = [user_json['time_zone']]
     except:
-        user_df['time_zone'] = [None]
+        try:
+           user_df['time_zone'] = [user_json['timezone']]
+        except:
+            user_df['time_zone'] = [None]
     
     # 24. read updated time
     try:
         user_df['updated_time'] = [pd.to_datetime(user_json['updated_time'])]
     except:
-        user_df['updated_time'] = [None]
+        pass
     
     # 25. read verified
     try:
@@ -263,10 +289,9 @@ def getFBUserFromJSON (user_json):
             try:
                 for concentration in education['concentration']:
                     education_row['concentration'] = concentration['name']
-                    education_df = education_df.append(education_row)
             except:
                 education_row['concentration'] = [None]
-                education_df = education_df.append(education_row)
+            education_df = education_df.append(education_row)
     except:
         pass
     
@@ -292,6 +317,7 @@ def getFBUserFromJSON (user_json):
             place_row = pd.DataFrame()
             place_row['user_id'] = [user_id]
             place_row['category'] = ['tagged']
+            place_row['post_id'] = [None]
             try:
                 place_row['city'] = [place['place']['location']['city']]
             except:
@@ -309,9 +335,9 @@ def getFBUserFromJSON (user_json):
             except:
                 place_row['longitude'] = [None]
             try:
-                place_row['created_time'] = [place['created_time']]
+                place_row['created_time'] = [pd.to_datetime(place['created_time'])]
             except:
-                place_row['created_time'] = [None]
+                pass
             location_df = location_df.append(place_row)
     except:
         pass
@@ -408,6 +434,7 @@ def getFBUserFromJSON (user_json):
     
     return user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
 
+
 #==============================================================================
 # Execution example
 #==============================================================================
@@ -427,3 +454,6 @@ def getFBUserFromJSON (user_json):
 #user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON (wojtek)
 #user_df2, photos_df2, location_df2, education_df2, languages_df2, likes_df2, work_df2 = getFBUserFromJSON (mikolaj)
 #user_df3, photos_df3, location_df3, education_df3, languages_df3, likes_df3, work_df3 = getFBUserFromJSON (pawel)
+#user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df = getFBUserFromJSON(user_json)
+
+#################
