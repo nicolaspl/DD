@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 
-'''path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
+path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\posts.json'
 path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\posts.json'
 path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\posts_2.json'
@@ -10,13 +10,16 @@ def openFile(path):
     file = json.load(f)
     return file 
 #
-posts = openFile (path)'''
+posts = openFile (path)
 
 def getFBPostsFromJSON (posts):
     post_table=pd.DataFrame()
     location_table = pd.DataFrame()
+    reaction_table = pd.DataFrame()
     post_dict={} 
     post_location_df = pd.DataFrame()
+    reaction_df = pd.DataFrame()
+#post 
     try:
         user_id = posts['id']
     except:
@@ -109,29 +112,26 @@ def getFBPostsFromJSON (posts):
                 except:
                     post_dict['reactions_cnt']=0                  
             post_table=post_table.append(pd.DataFrame([post_dict],columns=post_dict.keys())) 
-            
-            # post_location to location_table
-
+#post location             
             try:
-                for location in post['place']:
-                    
+                for location in [post['place']]:	
                     post_location_df['user_id'] = [user_id]
                     post_location_df['category'] = ['post_location']
                     post_location_df['post_id'] = post['id']
                     try:
-                        post_location_df['city'] = [post['place']['location']['city']]
+                        post_location_df['city'] = [location['location']['city']]
                     except:
                         post_location_df['city'] = [None]
                     try:
-                        post_location_df['country'] = [post['place']['location']['country']]
+                        post_location_df['country'] = [location['location']['country']]
                     except:
                         post_location_df['country'] = [None]
                     try:
-                        post_location_df['latitude'] = [post['place']['location']['latitude']]
+                        post_location_df['latitude'] = [location['location']['latitude']]
                     except:
                         post_location_df['latitude'] = [None]
                     try:
-                        post_location_df['longitude'] = [post['place']['location']['longitude']]
+                        post_location_df['longitude'] = [location['location']['longitude']]
                     except:
                         post_location_df['longitude'] = [None]
                     try:
@@ -142,14 +142,42 @@ def getFBPostsFromJSON (posts):
                         except:
                             pass
                     location_table = location_table.append(post_location_df)
-
             except:
-                pass          
-
+                pass
+#post reactions             
+            try:
+                for reaction in post['reactions']:	
+                    reaction_df['user_id'] = [user_id]
+                    reaction_df['post_id']=post['id']
+                    reaction_df['category'] = ['post_reaction']
+                    reaction_df['photo_id'] = [None]
+                    try:
+                        reaction_df['reaction_id'] = [reaction['id']]
+                    except:
+                        reaction_df['reaction_id'] = [None]
+                    try:
+                        reaction_df['from_name'] = [reaction['name']]
+                    except:
+                         reaction_df['from_name'] = [None]
+                    try:
+                        reaction_df['type'] = [reaction['type']]
+                    except:
+                         reaction_df['type'] = [None]                    
+                    try:
+                        reaction_df['created_time']=pd.to_datetime(post['created_time'])
+                    except:
+                        try:
+                            reaction_df['created_time']=pd.to_datetime(post['created_time']['date'])
+                        except:
+                            pass
+                    reaction_table = reaction_table.append(reaction_df)
+            except:
+                pass
     except:
         pass 
+			
     
-    return post_table, location_table
+    return post_table, location_table, reaction_table
 
-#post_table,location_table = getFBPostsFromJSON (posts)
+post_table,location_table,reaction_table = getFBPostsFromJSON (posts)
 

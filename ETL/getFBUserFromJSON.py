@@ -107,7 +107,7 @@ def getFBUserFromJSON (user_json):
     
     # 8. read hometown information
     try:
-        for hometown in user_json['hometown']['location']['city']:
+        for hometown in [user_json['hometown']['location']['city']]:
             hometown_df = pd.DataFrame()
             hometown_df['user_id'] = [user_id]
             hometown_df['category'] = ['hometown']
@@ -135,7 +135,7 @@ def getFBUserFromJSON (user_json):
     
     # 9. read current location information
     try:
-        for current_loc in user_json['location']['location']['city']:
+        for current_loc in [user_json['location']['location']['city']]:
             current_location_df = pd.DataFrame()
             current_location_df['user_id'] = [user_id]
             current_location_df['category'] = ['current']

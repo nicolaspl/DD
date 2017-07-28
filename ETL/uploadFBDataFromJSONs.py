@@ -13,7 +13,7 @@ db_password = ddconfig.db_password
 db_name = ddconfig.db_name
 
 ##Wgrywanie dataframow-load data##
-user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df = getFBDataFromJSONs()
+user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df, reactions_df = getFBDataFromJSONs()
 ##load data ##
 
 # Set up of the engine to connect to the database
@@ -143,7 +143,18 @@ def uploadFBLikes_categoryFromJSONs(engine,likes_category_df):
     FROM '+db_name+'.likes_category_df_tmp;')
     engine.execute(sql) 
     
+def uploadFBReactionsFromJSONs(engine,reactions_df):
+    
+    # łaowanie danych na serwer json.temp
+    reactions_df.to_sql(con=engine, name='reactions_df_tmp', if_exists='replace',index=False)
 
+    # insert nowych do tabeli docelowej
+    sql=text('INSERT IGNORE INTO '+db_name+'.reactions \
+    (`generationdate`, `user_id`, `post_id`, `photo_id`, `reaction_category`, `reaction_id`,`from_name`, `reaction_type`, `created_time`) \
+    SELECT \
+    now(), `user_id`, `post_id`, `photo_id`, `category`, `reaction_id`,`from_name`, `type`, `created_time` \
+    FROM '+db_name+'.reactions_df_tmp;')
+    engine.execute(sql) 
 
 #########################################################################################
 ######################################### WYWOŁANIE #####################################
@@ -184,6 +195,10 @@ def uploadFBDataFromJSONs():
     try:
         uploadFBLikes_categoryFromJSONs(engine,likes_category_df)
     except:
+        pass
+    try:
+        uploadFBReactionsFromJSONs(engine,reactions_df)
+    except:
         pass   
     
 ####usuwanie tabel tymczasowych####    
@@ -191,7 +206,7 @@ def dropFBtemptablesJSONs():
     
 
     
-    sql=text('DROP TABLE IF EXISTS likes_category_df_tmp ,likes_df_tmp ,photos_df_tmp ,user_df_tmp ,location_df_tmp ,education_df_tmp ,languages_df_tmp ,work_df_tmp ,posts_df_tmp;')
+    sql=text('DROP TABLE IF EXISTS likes_category_df_tmp ,likes_df_tmp ,photos_df_tmp ,user_df_tmp ,location_df_tmp ,education_df_tmp ,languages_df_tmp ,work_df_tmp ,posts_df_tmp ,reactions_df_tmp;')
     engine.execute(sql) 
 ################################### 
 

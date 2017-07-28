@@ -120,14 +120,14 @@ def getFBPostsDataFromJSONs():
         FBPostsJSONList.append(getJSONFromBucket('deepdocfbdata',filename))
     
     # 3.
-    posts_df, location_df = (pd.DataFrame(),)*2
+    posts_df, location_df, reactions_df = (pd.DataFrame(),)*3
     for FBPostsJSON in FBPostsJSONList:
-       current_posts_df, current_location_df = getFBPostsFromJSON(FBPostsJSON)
+       current_posts_df, current_location_df, current_reactions_df = getFBPostsFromJSON(FBPostsJSON)
        posts_df = posts_df.append(current_posts_df)
        location_df = location_df.append(current_location_df)
-        
+       reactions_df=reactions_df.append(current_reactions_df) 
     # 4.
-    return posts_df, location_df
+    return posts_df, location_df, reactions_df
 
 # weź tabele, będące wynikiem przetwarzania wszystkich plików (zakres tabel dubluje się pomiędzy wynikami zapytań)
 # zwróć zestaw tabel w takiej postaci, w jakiej będą zasilone do bazy
@@ -162,20 +162,20 @@ def getFBDataFromJSONs():
     likes_likes_df, likes_category_df = getFBLikesDataFromJSONs()
     
     # read posts
-    posts_df, posts_location_df = getFBPostsDataFromJSONs()
+    posts_df, posts_location_df, reactions_df = getFBPostsDataFromJSONs()
     
     # match tables
     photos_df, location_df, likes_df = matchFBDataTables(user_photos_df, 
                       photos_photos_df, user_location_df, posts_location_df,
                       user_likes_df, likes_likes_df)
     
-    return user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df
+    return user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df, reactions_df
 
 #==============================================================================
 # execution test
 #==============================================================================
 
-user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df = getFBDataFromJSONs()
+user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df,reactions_df = getFBDataFromJSONs()
 
 
 
