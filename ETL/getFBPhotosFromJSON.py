@@ -12,12 +12,14 @@ import pandas as pd
     file=json.load(f)
     return file
 
-path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\photos(6).json'
+path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\photos(4).json'
 photos =openFile(path)'''
 
 def getFBPhotosFromJSON(photos):
-    result=pd.DataFrame()
+    photos_table=pd.DataFrame()
     photo_dict={}
+    photo_reaction_df=pd.DataFrame()
+    photo_reaction_table=pd.DataFrame()
     try:
         user_id=photos['id']
     except:
@@ -49,7 +51,7 @@ def getFBPhotosFromJSON(photos):
                 try:
                     photo_dict['created_time']=pd.to_datetime(photo['created_time']['date'])
                 except:
-                    pass
+                    photo_dict['created_time']=pd.NaT
                           
             try:
                 photo_dict['backdated_time']=pd.to_datetime(photo['backdated_time'])   
@@ -57,7 +59,7 @@ def getFBPhotosFromJSON(photos):
                 try:
                    photo_dict['backdated_time']=pd.to_datetime(photo['backdated_time']['date'])
                 except:
-                    pass
+                    photo_dict['backdated_time']=pd.NaT
         
             try:
                 photo_dict['image_big_height']=photo['images'][0]['height']
@@ -109,13 +111,44 @@ def getFBPhotosFromJSON(photos):
                 photo_dict['from_name']=photo['from']['name']
                 photo_dict['from_id']=photo['from']['id']
             except:
-                photo_dict['from']=None
-            result=result.append(pd.DataFrame([photo_dict],columns=photo_dict.keys())) 
+                photo_dict['from']=None                      
+            photos_table=photos_table.append(pd.DataFrame([photo_dict],columns=photo_dict.keys()))
+#photo reactions             
+            try:
+                for reaction in photo['reactions']:	
+                    photo_reaction_df['user_id'] = [user_id]
+                    photo_reaction_df['photo_id']=photo['id']
+                    photo_reaction_df['category'] = ['photo_reaction']
+                    photo_reaction_df['post_id'] = [None]
+                    try:
+                        photo_reaction_df['reaction_id'] = [reaction['id']]
+                    except:
+                        photo_reaction_df['reaction_id'] = [None]
+                    try:
+                        photo_reaction_df['from_name'] = [reaction['name']]
+                    except:
+                         photo_reaction_df['from_name'] = [None]
+                    try:
+                        photo_reaction_df['type'] = [reaction['type']]
+                    except:
+                         photo_reaction_df['type'] = [None]                    
+                    try:
+                        photo_reaction_df['created_time']=pd.to_datetime(photo['created_time'])
+                    except:
+                        try:
+                            photo_reaction_df['created_time']=pd.to_datetime(photo['created_time']['date'])
+                        except:
+                            photo_reaction_df['created_time']=pd.NaT
+                    photo_reaction_table = photo_reaction_table.append(photo_reaction_df)
+            except:
+                pass            
+            
+            
     except:
         pass
                          
 
-    return result
+    return photos_table, photo_reaction_table
 
 
 ################ wywołanie ################
@@ -123,4 +156,4 @@ def getFBPhotosFromJSON(photos):
 #
 #
 #zdjecia=getFBPhotosFromJSON(photos)
-
+#photos_table, photo_reaction_table =getFBPhotosFromJSON(photos)

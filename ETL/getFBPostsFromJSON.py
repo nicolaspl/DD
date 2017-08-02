@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 
-path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
+'''path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\paweł\\posts.json'
 #path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\mikołaj\\posts.json'
 path = 'C:\\Users\\P\\Dropbox\\DeepDoc\\Materiały\\Przykładowe dane\\wojtek\\posts.json'
 path = 'C:\\Users\\P\\Desktop\\DDSandbox\\przykładowe dane\\posts_2.json'
@@ -10,7 +10,7 @@ def openFile(path):
     file = json.load(f)
     return file 
 #
-posts = openFile (path)
+posts = openFile (path)'''
 
 def getFBPostsFromJSON (posts):
     post_table=pd.DataFrame()
@@ -46,7 +46,7 @@ def getFBPostsFromJSON (posts):
                 try:
                     post_dict['created_time']=pd.to_datetime(post['created_time']['date'])
                 except:
-                    pass
+                    post_dict['created_time']=pd.NaT
             try:
                 post_dict['full_picture']=post['full_picture']
             except:
@@ -140,7 +140,7 @@ def getFBPostsFromJSON (posts):
                         try:
                             post_location_df['created_time']=pd.to_datetime(post['created_time']['date'])
                         except:
-                            pass
+                            post_location_df['created_time']=pd.NaT
                     location_table = location_table.append(post_location_df)
             except:
                 pass
@@ -169,7 +169,7 @@ def getFBPostsFromJSON (posts):
                         try:
                             reaction_df['created_time']=pd.to_datetime(post['created_time']['date'])
                         except:
-                            pass
+                            reaction_df['created_time']=pd.NaT
                     reaction_table = reaction_table.append(reaction_df)
             except:
                 pass
@@ -179,5 +179,5 @@ def getFBPostsFromJSON (posts):
     
     return post_table, location_table, reaction_table
 
-post_table,location_table,reaction_table = getFBPostsFromJSON (posts)
+#post_table,location_table,reaction_table = getFBPostsFromJSON (posts)
 

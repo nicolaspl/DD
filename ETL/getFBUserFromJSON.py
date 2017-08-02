@@ -50,7 +50,7 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['birthday'] = [pd.to_datetime(user_json['birthday'])] 
     except:
-        pass
+        user_df['birthday'] = [pd.NaT] 
     
     # 3. read cover photo
     try:
@@ -253,7 +253,7 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['updated_time'] = [pd.to_datetime(user_json['updated_time'])]
     except:
-        pass
+        user_df['updated_time'] = [pd.NaT]
     
     # 25. read verified
     try:
@@ -337,7 +337,7 @@ def getFBUserFromJSON (user_json):
             try:
                 place_row['created_time'] = [pd.to_datetime(place['created_time'])]
             except:
-                pass
+                place_row['created_time'] = [pd.NaT]
             location_df = location_df.append(place_row)
     except:
         pass
