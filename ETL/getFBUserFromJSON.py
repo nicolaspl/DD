@@ -50,7 +50,7 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['birthday'] = [pd.to_datetime(user_json['birthday'])] 
     except:
-        pass
+        user_df['birthday'] = [pd.NaT] 
     
     # 3. read cover photo
     try:
@@ -107,7 +107,7 @@ def getFBUserFromJSON (user_json):
     
     # 8. read hometown information
     try:
-        for hometown in user_json['hometown']['location']['city']:
+        for hometown in [user_json['hometown']['location']['city']]:
             hometown_df = pd.DataFrame()
             hometown_df['user_id'] = [user_id]
             hometown_df['category'] = ['hometown']
@@ -135,7 +135,7 @@ def getFBUserFromJSON (user_json):
     
     # 9. read current location information
     try:
-        for current_loc in user_json['location']['location']['city']:
+        for current_loc in [user_json['location']['location']['city']]:
             current_location_df = pd.DataFrame()
             current_location_df['user_id'] = [user_id]
             current_location_df['category'] = ['current']
@@ -253,7 +253,7 @@ def getFBUserFromJSON (user_json):
     try:
         user_df['updated_time'] = [pd.to_datetime(user_json['updated_time'])]
     except:
-        pass
+        user_df['updated_time'] = [pd.NaT]
     
     # 25. read verified
     try:
@@ -337,7 +337,7 @@ def getFBUserFromJSON (user_json):
             try:
                 place_row['created_time'] = [pd.to_datetime(place['created_time'])]
             except:
-                pass
+                place_row['created_time'] = [pd.NaT]
             location_df = location_df.append(place_row)
     except:
         pass
