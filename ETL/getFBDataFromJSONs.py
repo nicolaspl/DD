@@ -15,7 +15,7 @@ def getFileNamesFromBucket(bucket,extension):
     #zwraca df z nazwami plikow o danym rozszerzeniu, ktore wystepuja w konkretnym buckecie i jego podfolderach
     
     s3=boto3.client('s3',config=Config(signature_version='s3v4'))
-    prefix = 'facebook2'
+    prefix = 'facebook'
     paginator = s3.get_paginator('list_objects_v2')
     response_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
 
