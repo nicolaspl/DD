@@ -15,12 +15,13 @@ db_name = ddconfig.db_name
 
 ##Wgrywanie dataframow-load data##
 print('wgrywanie dataframow')
-user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df, reactions_df = getFBDataFromJSONs()
+user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df, posts_df, likes_category_df, reactions_df = getFBDataFromJSONs(100000)
 print('dataframy wgrane')
 ##load data ##
 
 # Set up of the engine to connect to the database
 engine = create_engine('mysql+pymysql://'+db_username+':'+db_password+'@'+rds_host+'/'+db_name+'?charset=utf8mb4')
+#engine = create_engine('mysql+pymysql://{}:{}@{}/{}?charset=utf8'.format(db_username,db_password,rds_host,db_name),encoding='utf-8')  
 conn = engine.connect()
 
 #########################################################################################
@@ -223,16 +224,16 @@ def dropFBtemptablesJSONs():
     engine.execute(sql) 
 ################################### 
 
-'''##testy
+##testy
 
-uploadFBDataFromJSONs() 
-dropFBtemptablesJSONs()  
 
 
 start = time.time()
 uploadFBDataFromJSONs() 
+dropFBtemptablesJSONs()  
 total = time.time()-start
 print(total)
 
 
-#testy'''
+#testy
+
