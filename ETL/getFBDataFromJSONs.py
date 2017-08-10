@@ -7,28 +7,47 @@ from getFBPhotosFromJSON import getFBPhotosFromJSON
 from getFBLikesFromJSON import getFBLikesFromJSON
 from getFBPostsFromJSON import getFBPostsFromJSON
 
+import time
+
 
 ################################################################################################
 ############################ FUNKCJE POMOCNICZE ################################################
 
-def getFileNamesFromBucket(bucket,extension):
+def getFileNamesFromBucket(bucket, extension, limit=10000000):
     #zwraca df z nazwami plikow o danym rozszerzeniu, ktore wystepuja w konkretnym buckecie i jego podfolderach
     
-    s3=boto3.client('s3',config=Config(signature_version='s3v4'))
-    prefix = 'facebook'
-    paginator = s3.get_paginator('list_objects_v2')
-    response_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
-
-    file_names = []
-
-    for response in response_iterator:
-        for object_data in response['Contents']:
-            key = object_data['Key']
-            if key.endswith(extension):
-                file_names.append(key)
-                result=pd.DataFrame({'File':file_names})
-    
-    return result
+#    s3=boto3.client('s3',config=Config(signature_version='s3v4'))
+#    prefix = 'facebook'
+#    paginator = s3.get_paginator('list_objects_v2')
+#    response_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+#
+#    file_names = []
+#
+#    for response in response_iterator:
+#        for object_data in response['Contents']:
+#            key = object_data['Key']
+#            if key.endswith(extension):
+#                file_names.append(key)
+#                result=pd.DataFrame({'File':file_names})
+#    
+#    return result
+    client = boto3.client('s3',config=Config(signature_version='s3v4'))
+    paginator = client.get_paginator('list_objects')
+    operation_parameters = {'Bucket': bucket}
+    page_iterator = paginator.paginate(**operation_parameters)
+    result = []
+    for page in page_iterator:
+        size = len(page['Contents'])
+        files = [page['Contents'][i]['Key'] for i in range(size)]
+        for file in files:
+            if file.endswith(extension):
+                result.append(file)
+            if len(result) == limit:
+                break
+        if len(result) == limit:
+            break
+    result_df = pd.DataFrame({'File':result}) 
+    return result_df
 
 
 def getJSONFromBucket(bucket,filename):
@@ -45,9 +64,9 @@ def getJSONFromBucket(bucket,filename):
 ################################################################################################
 ############################ FUNKCJE WŁAŚCIWE ##################################################
     
-def getFBUserDataFromJSONs():  
+def getFBUserDataFromJSONs(limit):  
     # 1. przeszukaj S3 pod kątem JSONów z danymi usera i utwórz listę z adresmi do plików
-    FBUserJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','user.json')
+    FBUserJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','user.json', limit)
     
     # 2. wczytaj każdego JSONa funkcją  getJSONFromBucket (pętla po licie jsonow)
     FBUserJSONList = []
@@ -72,9 +91,9 @@ def getFBUserDataFromJSONs():
     return user_df, photos_df, location_df, education_df, languages_df, likes_df, work_df
 
    
-def getFBPhotosDataFromJSONs():
+def getFBPhotosDataFromJSONs(limit):
     # 1.
-    FBPhotosJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','photos.json')
+    FBPhotosJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','photos.json', limit)
     
     # 2.
     FBPhotosJSONList = []
@@ -90,9 +109,9 @@ def getFBPhotosDataFromJSONs():
     # 4.
     return photos_df, photos_reaction_df
 
-def getFBLikesDataFromJSONs(): 
+def getFBLikesDataFromJSONs(limit): 
     # 1.
-    FBLikesJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','likes.json')
+    FBLikesJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','likes.json', limit)
     
     # 2.
     FBLikesJSONList = []
@@ -109,9 +128,9 @@ def getFBLikesDataFromJSONs():
     # 4.
     return likes_df, likes_category_df
 
-def getFBPostsDataFromJSONs():  
+def getFBPostsDataFromJSONs(limit):  
     # 1.
-    FBPostsJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','posts.json')
+    FBPostsJSONFileNameDF = getFileNamesFromBucket('fbdeepdocdata','posts.json', limit)
     
     # 2.
     FBPostsJSONList = []
@@ -151,19 +170,19 @@ def matchFBDataTables(user_photos_df, photos_photos_df, user_location_df, posts_
 #ponieważ poszczególne 4 funkcje mogą zasilać te same tabelki docelowe, użyj funkcji matchFBDataTables(), żeby połączyć te df (np. likes z User z Likes)
  #zwróć zestaw dataframeów, zawierający wszystkie dane ze wszystkich plików JSON, w takiej formie, żeby można było je załadować do bazy
  #ta funkcja powinna zawierać <10 linijek kodu
-def getFBDataFromJSONs():
+def getFBDataFromJSONs(limit):
     # read user 
     (user_df, user_photos_df, user_location_df, education_df, 
-     languages_df, user_likes_df, work_df) = getFBUserDataFromJSONs()
+     languages_df, user_likes_df, work_df) = getFBUserDataFromJSONs(limit)
 
     # read photos
-    photos_photos_df, photos_reaction_df  = getFBPhotosDataFromJSONs()
+    photos_photos_df, photos_reaction_df  = getFBPhotosDataFromJSONs(limit)
     
     # read likes
-    likes_likes_df, likes_category_df = getFBLikesDataFromJSONs()
+    likes_likes_df, likes_category_df = getFBLikesDataFromJSONs(limit)
     
     # read posts
-    posts_df, posts_location_df, posts_reactions_df = getFBPostsDataFromJSONs()
+    posts_df, posts_location_df, posts_reactions_df = getFBPostsDataFromJSONs(limit)
     
     # match tables
     photos_df, location_df, likes_df, reactions_df = matchFBDataTables(user_photos_df, 
@@ -176,15 +195,7 @@ def getFBDataFromJSONs():
 # execution test
 #==============================================================================
 
-user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df,reactions_df = getFBDataFromJSONs()
-
-
-
-
-
-
-
-
+#user_df, photos_df, location_df, likes_df, education_df, languages_df, work_df,posts_df,likes_category_df,reactions_df = getFBDataFromJSONs()
 
 
 
