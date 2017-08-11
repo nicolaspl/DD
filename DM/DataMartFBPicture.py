@@ -164,7 +164,7 @@ P.user_id, P.photo_id, \
 case when P.user_id=P.from_id then 1 else 0 end as sam_sobie \
 FROM deepdoc3.photos P; \
 \
-CREATE TABLE DataMartFBPicture_tmp \
+CREATE TEMPORARY TABLE DataMartFBPicture_tmp \
 (INDEX photokey (photo_id)) \
 SELECT P1.* ,P2.sam_sobie, R.reactioncnt, R.likecnt, R.lovecnt, R.angrycnt \
 ,R.sadcnt, R.wowcnt, R.hahacnt, R.pridecnt, R.thankfullcnt,F.facescnt, F.sum_SAD, F.sum_HAPPY \
