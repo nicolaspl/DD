@@ -1,0 +1,1 @@
+SELECT COUNT(DISTINCT p.photo_id) FROM deepdoc3.photos p INNER JOIN deepdoc3.photosHSV h ON p.photo_id=h.photo_id;

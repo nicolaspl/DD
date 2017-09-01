@@ -1,0 +1,1 @@
+SELECT COUNT(*), COUNT(photo_id), COUNT(DISTINCT photo_id), COUNT(DISTINCT user_id) FROM deepdoc3.photosHSV;
