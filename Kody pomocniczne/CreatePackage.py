@@ -40,7 +40,7 @@ def createPackage(host, user, auth, s3_path, project_name, modules):
     c.close()
 
 
-host = 'ec2-52-212-160-92.eu-west-1.compute.amazonaws.com'
+host = 'ec2-54-229-218-155.eu-west-1.compute.amazonaws.com'
 user = 'ubuntu'
 auth = 'ETLFacebook.pem'
 s3_path = 'deepdoccodes/produkcja/ETL\ Facebook/'

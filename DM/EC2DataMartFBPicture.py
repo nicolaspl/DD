@@ -22,56 +22,58 @@ rds_host  = ddconfig.rds_host
 db_username = ddconfig.db_username
 db_password = ddconfig.db_password
 db_name = ddconfig.db_name
-engine = create_engine('mysql+pymysql://'+db_username+':'+db_password+'@'+rds_host+'/'+db_name+'?charset=utf8',encoding='utf-8')
+engine = create_engine('mysql+pymysql://'+db_username+':'+db_password+'@'+rds_host+'/'+db_name+'?charset=utf8mb4')
    
-sql=text('USE deepdoc3; \
+sql=text('USE deepdoc3; SET SQL_SAFE_UPDATES=0; \
+DROP TABLE IF EXISTS R1, R2, R3, R4, R5, R6, R7, R8, R9, Rcombo, F1, F2, F3, Fcombo, P1, P2, DataMartFBPicture_tmp; \
 \
-CREATE TEMPORARY TABLE R1 \
+\
+CREATE TABLE R1 \
 SELECT user_id, photo_id, COUNT(photo_id) as reactioncnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL \
 group by photo_id, user_id; \
 \
-create TEMPORARY TABLE R2 \
+create TABLE R2 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as likecnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type = "LIKE" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R3 \
+create TABLE R3 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as lovecnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type = "LOVE" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R4 \
+create TABLE R4 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as angrycnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type = "ANGRY" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R5 \
+create TABLE R5 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as sadcnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type = "SAD" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R6 \
+create TABLE R6 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as wowcnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type = "WOW" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R7 \
+create TABLE R7 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as hahacnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type LIKE "HAHA" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R8 \
+create TABLE R8 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as pridecnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type LIKE "PRIDE" \
 group by photo_id; \
 \
-create TEMPORARY TABLE R9 \
+create TABLE R9 \
 SELECT reaction_type, photo_id, COUNT(reaction_type) as thankfullcnt FROM deepdoc3.reactions \
 WHERE photo_id IS NOT NULL AND reaction_type LIKE "THANKFULL" \
 group by photo_id; \
 \
-create TEMPORARY TABLE Rcombo \
+create TABLE Rcombo \
 SELECT R1.*,R2.likecnt ,R3.lovecnt , R4.angrycnt ,R5.sadcnt \
 ,R6.wowcnt ,R7.hahacnt ,R8.pridecnt ,R9.thankfullcnt \
 FROM R1 \
@@ -107,7 +109,7 @@ SET \
 ALTER TABLE Rcombo MODIFY Rcombo.photo_id VARCHAR(100), \
 ADD INDEX photo_idkey (photo_id) ; \
 \
-CREATE TEMPORARY TABLE F1 \
+CREATE TABLE F1 \
 (INDEX photokey (photo_id)) \
 SELECT \
 photo_id,COUNT(*) as facescnt \
@@ -129,7 +131,7 @@ photo_id,COUNT(*) as facescnt \
 FROM deepdoc3.photosAWSFaces \
 GROUP BY photo_id; \
 \
-CREATE TEMPORARY TABLE F2 \
+CREATE TABLE F2 \
 (INDEX photokey (photo_id)) \
 SELECT user_id \
 ,photo_id,COUNT(*) as femalecnt \
@@ -137,7 +139,7 @@ FROM deepdoc3.photosAWSFaces \
 WHERE Gender = "Female" \
 GROUP BY photo_id; \
 \
-CREATE TEMPORARY TABLE F3 \
+CREATE TABLE F3 \
 (INDEX photokey (photo_id)) \
 SELECT user_id \
 ,photo_id,COUNT(*) as malecnt \
@@ -145,7 +147,7 @@ FROM deepdoc3.photosAWSFaces \
 WHERE Gender = "Male" \
 GROUP BY photo_id; \
 \
-create TEMPORARY TABLE Fcombo \
+create TABLE Fcombo \
 (INDEX photokey (photo_id)) \
 SELECT F1.*, F2.femalecnt, F3.malecnt \
 FROM F1 \
@@ -154,19 +156,19 @@ LEFT JOIN F2 \
 LEFT JOIN F3 \
 	ON F1.photo_id= F3.photo_id; \
 \
-create TEMPORARY TABLE P1 \
+create TABLE P1 \
 (INDEX photokey (photo_id)) \
 SELECT user_id, photo_id, from_id, generationdate, created_time, image_name, \
  comments_cnt, likes_cnt, image_type, av_Faces, av_HSV, av_Labels FROM deepdoc3.photos; \
 \
-create TEMPORARY TABLE P2 \
+create TABLE P2 \
 (INDEX photokey (photo_id)) \
 SELECT \
 P.user_id, P.photo_id, \
 case when P.user_id=P.from_id then 1 else 0 end as sam_sobie \
 FROM deepdoc3.photos P; \
 \
-CREATE TEMPORARY TABLE DataMartFBPicture_tmp \
+CREATE TABLE DataMartFBPicture_tmp \
 (INDEX photokey (photo_id)) \
 SELECT P1.* ,P2.sam_sobie, R.reactioncnt, R.likecnt, R.lovecnt, R.angrycnt \
 ,R.sadcnt, R.wowcnt, R.hahacnt, R.pridecnt, R.thankfullcnt,F.facescnt, F.sum_SAD, F.sum_HAPPY \
@@ -235,55 +237,57 @@ INSERT INTO `DataMartFBPicture` \
 `blue`) \
 SELECT \
 now(), \
-z2.user_id, \
-z2.photo_id, \
-z2.from_id, \
-z2.created_time, \
-z2.image_name, \
-z2.comments_cnt, \
-z2.likes_cnt, \
-z2.image_type, \
-z2.av_Faces, \
-z2.av_HSV, \
-z2.av_Labels, \
-z2.sam_sobie, \
-z2.reactioncnt, \
-z2.likecnt, \
-z2.lovecnt, \
-z2.angrycnt, \
-z2.sadcnt, \
-z2.wowcnt, \
-z2.hahacnt, \
-z2.pridecnt, \
-z2.thankfullcnt, \
-z2.facescnt, \
-z2.sum_SAD, \
-z2.sum_HAPPY, \
-z2.sum_ANGRY, \
-z2.sum_confused, \
-z2.sum_DISGUSTED, \
-z2.sum_SURPRISED, \
-z2.sum_CALM, \
-z2.sum_UNKNOWN, \
-z2.sum_Sunglasses, \
-z2.smiletrue, \
-z2.smilefalse, \
-z2.min_AgeRange_Low, \
-z2.max_AgeRange_High, \
-z2.agegap, \
-z2.avgage, \
-z2.femalecnt, \
-z2.malecnt, \
-z2.hue, \
-z2.saturation, \
-z2.value, \
-z2.red, \
-z2.green, \
-z2.blue \
-FROM DataMartFBPicture_tmp z2 \
-LEFT JOIN DataMartFBPicture z1 \
-ON z1.photo_id=z2.photo_id \
-WHERE z1.photo_id is NULL OR (z1.reactioncnt<>z2.reactioncnt OR z1.facescnt<>z2.facescnt OR (z1.hue is NULL AND z2.hue is not NULL)); ')
+user_id, \
+photo_id, \
+from_id, \
+created_time, \
+image_name, \
+comments_cnt, \
+likes_cnt, \
+image_type, \
+av_Faces, \
+av_HSV, \
+av_Labels, \
+sam_sobie, \
+reactioncnt, \
+likecnt, \
+lovecnt, \
+angrycnt, \
+sadcnt, \
+wowcnt, \
+hahacnt, \
+pridecnt, \
+thankfullcnt, \
+facescnt, \
+sum_SAD, \
+sum_HAPPY, \
+sum_ANGRY, \
+sum_confused, \
+sum_DISGUSTED, \
+sum_SURPRISED, \
+sum_CALM, \
+sum_UNKNOWN, \
+sum_Sunglasses, \
+smiletrue, \
+smilefalse, \
+min_AgeRange_Low, \
+max_AgeRange_High, \
+agegap, \
+avgage, \
+femalecnt, \
+malecnt, \
+hue, \
+saturation, \
+value, \
+red, \
+green, \
+blue \
+FROM DataMartFBPicture_tmp; \
+DROP TABLE IF EXISTS R1, R2, R3, R4, R5, R6, R7, R8, R9, Rcombo, F1, F2, F3, Fcombo, P1, P2, DataMartFBPicture_tmp;')
+#FROM DataMartFBPicture_tmp z2 \
+#LEFT JOIN DataMartFBPicture z1 \
+#ON z1.photo_id=z2.photo_id \
+#WHERE z1.photo_id is NULL OR (z1.reactioncnt<>z2.reactioncnt OR z1.facescnt<>z2.facescnt OR (z1.hue is NULL AND z2.hue is not NULL)); ')
 
 print("Execute SQL query")
 start_time = time.time()

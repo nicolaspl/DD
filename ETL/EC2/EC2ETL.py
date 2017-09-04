@@ -40,15 +40,15 @@ date = datetime.datetime.today()
 today = str(date.date()) + '_' + str(date.time())
 
 
-#process = subprocess.Popen('python /home/ubuntu/scripts/DD/EC2UploadFBDataFromJSONs.py > ' + logs_path + 'EC2UploadFBDataFromJSONs/' + today + '.txt', shell=True, stdout=subprocess.PIPE)
-#process.wait()
-#print(process.returncode)
-#
-#process = subprocess.Popen('python3 /home/ubuntu/scripts/DD/EC2UploadImageProcessingData.py > ' + logs_path + 'EC2UploadImageProcessingData/' + today + '.txt' , shell=True, stdout=subprocess.PIPE)
-#process.wait()
-#print(process.returncode)
+process = subprocess.Popen('python /home/ubuntu/scripts/DD/EC2UploadFBDataFromJSONs.py > ' + logs_path + 'EC2UploadFBDataFromJSONs/' + today + '.txt', shell=True, stdout=subprocess.PIPE)
+process.wait()
+print(process.returncode)
 
-# Start EC2 instance
+process = subprocess.Popen('python3 /home/ubuntu/scripts/DD/EC2UploadImageProcessingData.py > ' + logs_path + 'EC2UploadImageProcessingData/' + today + '.txt' , shell=True, stdout=subprocess.PIPE)
+process.wait()
+print(process.returncode)
+
+# Start EC2DM instance
 startInstance(DM_instance_id)
 # Get instance IPv4
 host = getInstanceDNS(DM_instance_id)

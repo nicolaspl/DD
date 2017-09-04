@@ -15,7 +15,7 @@ instance_id = 'i-071dae9631dee08d3'
 user = 'ubuntu'
 
 tmppath = '/tmp/ETLFacebook.pem'
-wintmppath = 'C:\\tmp\\ETLFacebook.pem'
+#wintmppath = 'C:\\tmp\\ETLFacebook.pem'
 
 def startInstance(instance_id):
     ec2 = boto3.resource('ec2')
@@ -38,10 +38,10 @@ def lambda_handler(event, context):
     # Get instance IPv4
     host = getInstanceDNS(instance_id)
     # Download private key file from secure S3 bucket
-#    s3_client = boto3.client('s3')
-#    s3_client.download_file(bucket,keyfilename,  wintmppath)
+    s3_client = boto3.client('s3')
+    s3_client.download_file(bucket,keyfilename,  tmppath)
     # Podaj private key z pliku
-    k = paramiko.RSAKey.from_private_key_file(wintmppath)
+    k = paramiko.RSAKey.from_private_key_file(tmppath)
     # Stwórz połączenie SSH z serverem
     c = paramiko.SSHClient()
     c.set_missing_host_key_policy(paramiko.AutoAddPolicy())

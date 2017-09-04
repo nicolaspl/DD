@@ -1,5 +1,5 @@
 USE deepdoc3; 
-
+SET SQL_SAFE_UPDATES=0;
 DROP TABLE IF EXISTS R1, R2, R3, R4, R5, R6, R7, R8, R9, Rcombo, F1, F2, F3, Fcombo, P1, P2, DataMartFBPicture_tmp;
 
 CREATE TEMPORARY TABLE R1 
@@ -80,7 +80,7 @@ SET
      ,pridecnt = COALESCE(pridecnt, 0) 
      ,thankfullcnt = COALESCE(thankfullcnt, 0)
 WHERE
-	photo_id <> 0;
+	user_id <> 0 AND photo_id <> 0;
 ALTER TABLE Rcombo MODIFY Rcombo.photo_id VARCHAR(100), 
 ADD INDEX photo_idkey (photo_id) ; 
 
