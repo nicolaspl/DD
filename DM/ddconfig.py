@@ -7,9 +7,9 @@ Created on Mon Jun 19 11:21:20 2017
 
 ############################################################
 ################## RDS CONFIG ##############################
-rds_host = 'deepdoc.ctjllxyunqbm.eu-west-1.rds.amazonaws.com'
-db_username = "dd_pawel"
-db_password = "Lato17"
+rds_host = ''
+db_username = ""
+db_password = ""
 db_name = "deepdoc3" 
 
 ############################################################
