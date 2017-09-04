@@ -1,0 +1,1 @@
+SELECT COUNT(user_id), COUNT(DISTINCT user_id) FROM deepdoc3.user;
