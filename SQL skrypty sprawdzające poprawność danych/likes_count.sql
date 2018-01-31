@@ -1,0 +1,1 @@
+SELECT COUNT(*), COUNT(DISTINCT user_id) FROM deepdoc3.likes;
